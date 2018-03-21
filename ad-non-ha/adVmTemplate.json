@@ -146,7 +146,7 @@
             "name": "[parameters('vmName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2017-12-01",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccount'))]",
                 "[resourceId('Microsoft.Network/networkInterfaces',parameters('adDNicName'))]"
@@ -168,13 +168,14 @@
                         "version": "[parameters('windowsImageVersion')]"
                     },
                     "osDisk": {
-                        "name": "osdisk",
-                        "vhd": {
-                            "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageAccount')),providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob ,variables('vmvhdContainerName'),'/', parameters('vmName'), '0','-osdisk.vhd')]"
-                        },
+                        "name": "osDiskAdVm",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    },
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                          "storageAccountType": "Standard_LRS"
+                          },
+                          "diskSizeGB": 128
+                      },
                     "dataDisks": [
                         {
                             "vhd": {
